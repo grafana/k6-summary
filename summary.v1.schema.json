@@ -1,0 +1,443 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "summary.v1.schema.json",
+    "title": "k6 Machine-Readable End-of-Test Summary Schema v1",
+    "description": "Official JSON schema for k6's machine-readable end-of-test summary format version 1.0",
+    "__comment": "The $id field identifies this schema file, while the version field in the data tells consumers what format version their data should declare. These serve different purposes: schema evolution vs data format versioning.",
+    "type": "object",
+    "required": ["version", "metadata", "config", "results"],
+    "additionalProperties": false,
+    "properties": {
+      "version": {
+        "type": "integer",
+        "const": 1,
+        "description": "Major schema version number for breaking changes (always 1 for this schema)"
+      },
+      "metadata": {
+        "type": "object",
+        "description": "Metadata about the summary generation",
+        "required": ["generatedAt", "k6Version"],
+        "additionalProperties": false,
+        "properties": {
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "RFC3339 timestamp when summary was generated"
+          },
+          "k6Version": {
+            "type": "string",
+            "description": "Version of k6 that generated this summary"
+          }
+        }
+      },
+      "config": {
+        "type": "object",
+        "description": "Configuration information about the test execution",
+        "required": ["execution", "duration"],
+        "additionalProperties": false,
+        "properties": {
+          "execution": {
+            "type": "string",
+            "enum": ["local", "cloud"],
+            "description": "Type of execution (local or cloud)"
+          },
+          "script": {
+            "type": "string",
+            "description": "Path or name of the test script"
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Test run duration in seconds"
+          },
+          "outputs": {
+            "type": "array",
+            "description": "List of configured outputs",
+            "items": {
+              "type": "object",
+              "required": ["kind"],
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "description": "Type of output (e.g., json, csv, cloud, influxdb)"
+                },
+                "destination": {
+                  "type": "string",
+                  "description": "Output destination (file path, URL, etc.)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "results": {
+        "type": "object",
+        "description": "Test execution results data",
+        "required": ["passed", "metrics"],
+        "additionalProperties": false,
+        "properties": {
+          "passed": {
+            "type": "boolean",
+            "description": "Whether the test passed (true) or failed (false). Determined by threshold evaluations and other test criteria."
+          },
+          "metrics": {
+            "type": "object",
+            "description": "Metrics organized by category",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+              "http": {
+                "type": "object",
+                "description": "HTTP-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "execution": {
+                "type": "object",
+                "description": "Execution-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "network": {
+                "type": "object",
+                "description": "Network-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "browser": {
+                "type": "object",
+                "description": "Browser-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "web_vitals": {
+                "type": "object",
+                "description": "Web Vitals metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "grpc": {
+                "type": "object",
+                "description": "gRPC-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "websocket": {
+                "type": "object",
+                "description": "WebSocket-related metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              },
+              "custom": {
+                "type": "object",
+                "description": "User-defined custom metrics",
+                "patternProperties": {
+                  "^.+$": {
+                    "$ref": "#/$defs/metric"
+                  }
+                }
+              }
+            }
+          },
+          "checks": {
+            "type": "object",
+            "description": "Check execution results",
+            "additionalProperties": false,
+            "properties": {
+              "metrics": {
+                "type": "object",
+                "description": "Check-related metrics",
+                "additionalProperties": false,
+                "properties": {
+                  "checksTotal": {
+                    "$ref": "#/$defs/counterMetric"
+                  },
+                  "checksSucceeded": {
+                    "$ref": "#/$defs/rateMetric"
+                  },
+                  "checksFailed": {
+                    "$ref": "#/$defs/rateMetric"
+                  }
+                }
+              },
+              "orderedChecks": {
+                "type": "array",
+                "description": "Individual check results in execution order",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "passes", "fails"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Check name"
+                    },
+                    "passes": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of times the check passed"
+                    },
+                    "fails": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of times the check failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "$defs": {
+      "metricBase": {
+        "type": "object",
+        "description": "Base properties for all metrics",
+        "required": ["name", "type", "contains"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The metric name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["counter", "gauge", "rate", "trend"],
+            "description": "The metric type"
+          },
+          "contains": {
+            "type": "string",
+            "enum": ["default", "time", "data"],
+            "description": "The type of data the metric contains"
+          }
+        }
+      },
+      "counterMetric": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/metricBase"
+          },
+          {
+            "type": "object",
+            "required": ["values"],
+            "additionalProperties": false,
+            "properties": {
+              "name": true,
+              "type": {
+                "const": "counter"
+              },
+              "contains": true,
+              "values": {
+                "type": "object",
+                "description": "Counter metric values",
+                "required": ["count", "rate"],
+                "additionalProperties": false,
+                "properties": {
+                  "count": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Total count of events"
+                  },
+                  "rate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Rate of events per second"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "gaugeMetric": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/metricBase"
+          },
+          {
+            "type": "object",
+            "required": ["values"],
+            "additionalProperties": false,
+            "properties": {
+              "name": true,
+              "type": {
+                "const": "gauge"
+              },
+              "contains": true,
+              "values": {
+                "type": "object",
+                "description": "Gauge metric values",
+                "required": ["value", "min", "max"],
+                "additionalProperties": false,
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "description": "Current/final gauge value"
+                  },
+                  "min": {
+                    "type": "number",
+                    "description": "Minimum observed value"
+                  },
+                  "max": {
+                    "type": "number",
+                    "description": "Maximum observed value"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "rateMetric": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/metricBase"
+          },
+          {
+            "type": "object",
+            "required": ["values"],
+            "additionalProperties": false,
+            "properties": {
+              "name": true,
+              "type": {
+                "const": "rate"
+              },
+              "contains": true,
+              "values": {
+                "type": "object",
+                "description": "Rate metric values",
+                "required": ["rate", "passes", "fails"],
+                "additionalProperties": false,
+                "properties": {
+                  "rate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Success rate as a decimal (0.0 to 1.0)"
+                  },
+                  "passes": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of successful events"
+                  },
+                  "fails": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of failed events"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trendMetric": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/metricBase"
+          },
+          {
+            "type": "object",
+            "required": ["values"],
+            "additionalProperties": false,
+            "properties": {
+              "name": true,
+              "type": {
+                "const": "trend"
+              },
+              "contains": true,
+              "values": {
+                "type": "object",
+                "description": "Trend metric values with configurable statistics",
+                "required": ["count"],
+                "additionalProperties": false,
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of data points"
+                  },
+                  "avg": {
+                    "type": "number",
+                    "description": "Average (mean) value"
+                  },
+                  "min": {
+                    "type": "number",
+                    "description": "Minimum value"
+                  },
+                  "med": {
+                    "type": "number",
+                    "description": "Median value"
+                  },
+                  "max": {
+                    "type": "number",
+                    "description": "Maximum value"
+                  },
+                  "p(90)": {
+                    "type": "number",
+                    "description": "90th percentile"
+                  },
+                  "p(95)": {
+                    "type": "number",
+                    "description": "95th percentile"
+                  },
+                  "p(99)": {
+                    "type": "number",
+                    "description": "99th percentile"
+                  },
+                  "p(99.9)": {
+                    "type": "number",
+                    "description": "99.9th percentile"
+                  }
+                },
+                "patternProperties": {
+                  "^p\\([0-9]+(\\.[0-9]+)?\\)$": {
+                    "type": "number",
+                    "description": "Custom percentile value"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "metric": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/counterMetric"
+          },
+          {
+            "$ref": "#/$defs/gaugeMetric"
+          },
+          {
+            "$ref": "#/$defs/rateMetric"
+          },
+          {
+            "$ref": "#/$defs/trendMetric"
+          }
+        ]
+      }
+    }
+  }

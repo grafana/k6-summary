@@ -23,13 +23,8 @@ jobs:
         with:
           deno-version: v1.x
           
-      - name: Install Just
-        uses: extractions/setup-just@dd310ad5a97d8e7b41793f8ef055398d51ad4de6 # v2.0.0
-        with:
-          just-version: 1.14.0
-          
       - name: Validate JSON Schema 
-        run: just validate-schema
+        run: make validate-schema
 
       - name: Validate Examples
-        run: just validate-examples
+        run: make validate-examples

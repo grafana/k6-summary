@@ -10,8 +10,8 @@
       "duration": 60.0,
       "outputs": [
         {
-          "kind": "json",
-          "destination": "summary.json"
+          "outputType": "json",
+          "configArgument": "summary.json"
         }
       ]
     },

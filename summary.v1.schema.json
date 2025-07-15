@@ -54,14 +54,14 @@
             "description": "List of configured outputs",
             "items": {
               "type": "object",
-              "required": ["kind"],
+              "required": ["outputType"],
               "additionalProperties": false,
               "properties": {
-                "kind": {
+                "outputType": {
                   "type": "string",
                   "description": "Type of output (e.g., json, csv, cloud, influxdb)"
                 },
-                "destination": {
+                "configArgument": {
                   "type": "string",
                   "description": "Output destination (file path, URL, etc.)"
                 }

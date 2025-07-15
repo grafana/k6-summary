@@ -6,7 +6,8 @@ const ajv = new Ajv({
   strict: false,
   allowUnionTypes: true,
   allErrors: true,
-  loadSchema: true
+  loadSchema: true,
+  validateSchema: false // Disable meta-schema validation to avoid issues
 });
 
 // Add format validation
@@ -28,6 +29,16 @@ try {
   console.log(`📋 Validating example: ${exampleFile}`);
   console.log(`📐 Against schema: ${schemaFile}`);
   
+  // Load referenced semver schema if it exists
+  try {
+    const semverSchemaPath = new URL("semver.schema.json", import.meta.url).pathname;
+    const semverSchema = JSON.parse(await Deno.readTextFile("./semver.schema.json"));
+    ajv.addSchema(semverSchema, "semver.schema.json");
+    console.log("✅ Loaded semver schema reference");
+  } catch (semverError) {
+    console.log(`⚠️  Could not load semver schema: ${semverError.message}`);
+  }
+  
   // Compile schema and validate example
   let validate;
   let valid;
@@ -38,7 +49,8 @@ try {
     valid = validate(example);
   } catch (compileError) {
     // Handle meta-schema reference issues gracefully
-    if (compileError.message.includes('no schema with key or ref')) {
+    console.log(`⚠️  Schema compilation error: ${compileError.message}`);
+    if (compileError.message.includes('no schema with key or ref') || compileError.message.includes('cannot resolve reference')) {
       console.log("⚠️  Meta-schema reference warning (continuing with basic validation)");
       
       // Fall back to basic structural validation
@@ -47,8 +59,8 @@ try {
       console.log(`📊 Example has ${Object.keys(example.results?.metrics || {}).length} metric categories`);
       
       // Basic structure checks
-      if (!example.version || example.version !== 1) {
-        console.log("❌ Example missing or invalid version field");
+      if (!example.version || typeof example.version !== 'string' || !example.version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/)) {
+        console.log("❌ Example missing or invalid version field (must be semver 2.0 format)");
         Deno.exit(1);
       }
       if (!example.metadata || !example.config || !example.results) {

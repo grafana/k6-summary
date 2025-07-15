@@ -9,9 +9,8 @@
     "additionalProperties": false,
     "properties": {
       "version": {
-        "type": "integer",
-        "const": 1,
-        "description": "Major schema version number for breaking changes (always 1 for this schema)"
+        "$ref": "semver.schema.json",
+        "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
       },
       "metadata": {
         "type": "object",

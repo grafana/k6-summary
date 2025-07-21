@@ -31,15 +31,15 @@ try {
   
   // Load referenced schemas
   try {
-    const semverSchema = JSON.parse(await Deno.readTextFile("./semver.schema.json"));
-    ajv.addSchema(semverSchema, "semver.schema.json");
+    const semverSchema = JSON.parse(await Deno.readTextFile("./schemas/semver.schema.json"));
+    ajv.addSchema(semverSchema, "../semver.schema.json");
     console.log("✅ Loaded semver schema reference");
   } catch (semverError) {
     console.log(`⚠️  Could not load semver schema: ${semverError.message}`);
   }
   
   try {
-    const metricSchema = JSON.parse(await Deno.readTextFile("./metric.v1.schema.json"));
+    const metricSchema = JSON.parse(await Deno.readTextFile("./schemas/v1/metric.v1.schema.json"));
     ajv.addSchema(metricSchema, "metric.v1.schema.json");
     console.log("✅ Loaded metric schema reference");
   } catch (metricError) {

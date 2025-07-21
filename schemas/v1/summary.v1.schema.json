@@ -9,7 +9,7 @@
     "additionalProperties": false,
     "properties": {
       "version": {
-        "$ref": "semver.schema.json",
+        "$ref": "../semver.schema.json",
         "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
       },
       "metadata": {

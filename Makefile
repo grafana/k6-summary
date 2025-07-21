@@ -28,11 +28,11 @@ validate: validate-schema validate-examples ## Validate the JSON schema and exam
 validate-schema: ## Validate the JSON schema against the meta-schema
 	@echo "Validating JSON schemas"
 ifeq ($(VERBOSE),1)
-	deno run --allow-read validate-schema.ts summary.v1.schema.json
-	deno run --allow-read validate-schema.ts metric.v1.schema.json
+	deno run --allow-read validate-schema.ts schemas/v1/summary.v1.schema.json
+	deno run --allow-read validate-schema.ts schemas/v1/metric.v1.schema.json
 else
-	@deno run --allow-read validate-schema.ts summary.v1.schema.json > /dev/null
-	@deno run --allow-read validate-schema.ts metric.v1.schema.json > /dev/null
+	@deno run --allow-read validate-schema.ts schemas/v1/summary.v1.schema.json > /dev/null
+	@deno run --allow-read validate-schema.ts schemas/v1/metric.v1.schema.json > /dev/null
 	@echo "✅ All schemas valid"
 endif
 
@@ -41,13 +41,13 @@ validate-examples: ## Validate the examples against the schema
 ifeq ($(VERBOSE),1)
 	for example in examples/v1/*.json; do \
 		if [ -f "$$example" ]; then \
-			deno run --allow-read --allow-net validate-example.ts "$$example" summary.v1.schema.json; \
+			deno run --allow-read --allow-net validate-example.ts "$$example" schemas/v1/summary.v1.schema.json; \
 		fi \
 	done
 else
 	@for example in examples/v1/*.json; do \
 		if [ -f "$$example" ]; then \
-			deno run --allow-read --allow-net validate-example.ts "$$example" summary.v1.schema.json > /dev/null && echo "✅ $$(basename $$example)"; \
+			deno run --allow-read --allow-net validate-example.ts "$$example" schemas/v1/summary.v1.schema.json > /dev/null && echo "✅ $$(basename $$example)"; \
 		fi \
 	done
 endif

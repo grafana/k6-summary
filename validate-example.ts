@@ -29,14 +29,21 @@ try {
   console.log(`📋 Validating example: ${exampleFile}`);
   console.log(`📐 Against schema: ${schemaFile}`);
   
-  // Load referenced semver schema if it exists
+  // Load referenced schemas
   try {
-    const semverSchemaPath = new URL("semver.schema.json", import.meta.url).pathname;
     const semverSchema = JSON.parse(await Deno.readTextFile("./semver.schema.json"));
     ajv.addSchema(semverSchema, "semver.schema.json");
     console.log("✅ Loaded semver schema reference");
   } catch (semverError) {
     console.log(`⚠️  Could not load semver schema: ${semverError.message}`);
+  }
+  
+  try {
+    const metricSchema = JSON.parse(await Deno.readTextFile("./metric.v1.schema.json"));
+    ajv.addSchema(metricSchema, "metric.v1.schema.json");
+    console.log("✅ Loaded metric schema reference");
+  } catch (metricError) {
+    console.log(`⚠️  Could not load metric schema: ${metricError.message}`);
   }
   
   // Compile schema and validate example
@@ -56,7 +63,7 @@ try {
       // Fall back to basic structural validation
       console.log("✅ Example has valid JSON syntax");
       console.log(`📊 Example declares version: ${example.version}`);
-      console.log(`📊 Example has ${Object.keys(example.results?.metrics || {}).length} metric categories`);
+      console.log(`📊 Example has ${(example.results?.metrics || []).length} metrics`);
       
       // Basic structure checks
       if (!example.version || typeof example.version !== 'string' || !example.version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/)) {
@@ -79,7 +86,7 @@ try {
     if (valid) {
       console.log("✅ Example is valid against schema");
       console.log(`📊 Example declares version: ${example.version}`);
-      console.log(`📊 Example has ${Object.keys(example.results?.metrics || {}).length} metric categories`);
+      console.log(`📊 Example has ${(example.results?.metrics || []).length} metrics`);
       
       // Show some stats about the example
       if (example.results?.checks?.orderedChecks) {

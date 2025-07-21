@@ -27,9 +27,16 @@ try {
   // Basic structure checks
   if (!userSchema.$schema) throw new Error('Missing $schema field');
   if (!userSchema.title) throw new Error('Missing title field');
-  if (!userSchema.type) throw new Error('Missing type field');
-  if (!userSchema.properties) throw new Error('Missing properties field');
-  if (!userSchema.$defs) throw new Error('Missing $defs field');
+  
+  // Check for either type (object schema) or oneOf (union schema)
+  if (!userSchema.type && !userSchema.oneOf) {
+    throw new Error('Missing type or oneOf field');
+  }
+  
+  // If it's an object schema, it should have properties
+  if (userSchema.type === 'object' && !userSchema.properties) {
+    throw new Error('Object schema missing properties field');
+  }
   
   console.log('✅ Schema has required top-level fields');
   console.log('Schema title:', userSchema.title);

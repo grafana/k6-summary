@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "metric.v1.schema.json",
+  "$id": "https://schemas.k6.io/v1/metric.v1.schema.json",
   "title": "k6 Metric Schema v1",
   "description": "JSON schema for k6 metric objects with category information",
   "oneOf": [

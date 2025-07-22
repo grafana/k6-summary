@@ -9,7 +9,7 @@ else
     Q = @
 endif
 
-.PHONY: help validate validate-schema validate-examples
+.PHONY: help validate validate-schema validate-examples check-jsonschema
 
 help: ## Show available targets
 	@echo "Available targets:"
@@ -25,29 +25,53 @@ help: ## Show available targets
 
 validate: validate-schema validate-examples ## Validate the JSON schema and examples
 
-validate-schema: ## Validate the JSON schema against the meta-schema
+check-jsonschema: ## Check if jsonschema CLI is installed
+	@command -v jsonschema >/dev/null 2>&1 || { \
+		echo "❌ jsonschema CLI not found"; \
+		echo ""; \
+		echo "Please install it using one of these methods:"; \
+		echo "  • npm: npm install --global @sourcemeta/jsonschema"; \
+		echo "  • Homebrew: brew install sourcemeta/apps/jsonschema"; \
+		echo "  • More options: https://github.com/sourcemeta/jsonschema"; \
+		echo ""; \
+		exit 1; \
+	}
+
+validate-schema: check-jsonschema ## Validate the JSON schema against the meta-schema
 	@echo "Validating JSON schemas"
 ifeq ($(VERBOSE),1)
-	deno run --allow-read validate-schema.ts schemas/v1/summary.v1.schema.json
-	deno run --allow-read validate-schema.ts schemas/v1/metric.v1.schema.json
+	@for schema in schemas/*.schema.json schemas/**/*.schema.json; do \
+		if [ -f "$$schema" ]; then \
+			echo "Validating $$schema..."; \
+			jsonschema metaschema "$$schema"; \
+		fi \
+	done
 else
-	@deno run --allow-read validate-schema.ts schemas/v1/summary.v1.schema.json > /dev/null
-	@deno run --allow-read validate-schema.ts schemas/v1/metric.v1.schema.json > /dev/null
+	@for schema in schemas/*.schema.json schemas/**/*.schema.json; do \
+		if [ -f "$$schema" ]; then \
+			jsonschema metaschema "$$schema" > /dev/null; \
+		fi \
+	done
 	@echo "✅ All schemas valid"
 endif
 
-validate-examples: ## Validate the examples against the schema
+validate-examples: check-jsonschema ## Validate the examples against the schema
 	@echo "Validating examples against schema"
 ifeq ($(VERBOSE),1)
-	for example in examples/v1/*.json; do \
+	@for example in examples/v1/*.json; do \
 		if [ -f "$$example" ]; then \
-			deno run --allow-read --allow-net validate-example.ts "$$example" schemas/v1/summary.v1.schema.json; \
+			echo "Validating $$(basename $$example)..."; \
+			jsonschema validate --resolve schemas/v1/metric.v1.schema.json --resolve schemas/semver.schema.json schemas/v1/summary.v1.schema.json "$$example"; \
 		fi \
 	done
 else
 	@for example in examples/v1/*.json; do \
 		if [ -f "$$example" ]; then \
-			deno run --allow-read --allow-net validate-example.ts "$$example" schemas/v1/summary.v1.schema.json > /dev/null && echo "✅ $$(basename $$example)"; \
+			if jsonschema validate --resolve schemas/v1/metric.v1.schema.json --resolve schemas/semver.schema.json schemas/v1/summary.v1.schema.json "$$example" > /dev/null 2>&1; then \
+				echo "✅ $$(basename $$example)"; \
+			else \
+				echo "❌ $$(basename $$example) - Validation failed"; \
+			fi; \
 		fi \
 	done
 endif

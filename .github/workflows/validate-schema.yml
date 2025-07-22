@@ -18,10 +18,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
         
-      - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31 # v1.1.2
-        with:
-          deno-version: v1.x
+      - name: Install JSON Schema CLI
+        uses: sourcemeta/jsonschema@a1c61a0e66ee454b0ee71270124574862977c511 # v10.0.0
           
       - name: Validate JSON Schema 
         run: make validate-schema

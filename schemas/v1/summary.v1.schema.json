@@ -3,7 +3,6 @@
     "$id": "summary.v1.schema.json",
     "title": "k6 Machine-Readable End-of-Test Summary Schema v1",
     "description": "Official JSON schema for k6's machine-readable end-of-test summary format version 1.0",
-    "__comment": "The $id field identifies this schema file, while the version field in the data tells consumers what format version their data should declare. These serve different purposes: schema evolution vs data format versioning.",
     "type": "object",
     "required": ["version", "metadata", "config", "results"],
     "additionalProperties": false,
@@ -108,7 +107,7 @@
                   }
                 }
               },
-              "orderedChecks": {
+              "ordered": {
                 "type": "array",
                 "description": "Individual check results in execution order",
                 "items": {

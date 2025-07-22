@@ -185,7 +185,7 @@
             }
           }
         },
-        "orderedChecks": [
+        "ordered": [
           {
             "name": "status is 200",
             "passes": 1470,

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.k6.io/semver.schema.json",
+  "$id": "https://schemas.k6.io/semver/2.0.0/schema.json",
   "title": "Semantic Versioning 2.0.0 Schema",
   "description": "JSON schema for validating semantic version strings according to semver 2.0.0 specification",
   "type": "string",

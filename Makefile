@@ -40,17 +40,13 @@ check-jsonschema: ## Check if jsonschema CLI is installed
 validate-schema: check-jsonschema ## Validate the JSON schema against the meta-schema
 	@echo "Validating JSON schemas"
 ifeq ($(VERBOSE),1)
-	@for schema in schemas/*.schema.json schemas/**/*.schema.json; do \
-		if [ -f "$$schema" ]; then \
-			echo "Validating $$schema..."; \
-			jsonschema metaschema "$$schema"; \
-		fi \
+	@find schemas -name "schema.json" -type f | while read schema; do \
+		echo "Validating $$schema..."; \
+		jsonschema metaschema "$$schema"; \
 	done
 else
-	@for schema in schemas/*.schema.json schemas/**/*.schema.json; do \
-		if [ -f "$$schema" ]; then \
-			jsonschema metaschema "$$schema" > /dev/null; \
-		fi \
+	@find schemas -name "schema.json" -type f | while read schema; do \
+		jsonschema metaschema "$$schema" > /dev/null; \
 	done
 	@echo "✅ All schemas valid"
 endif
@@ -58,20 +54,16 @@ endif
 validate-examples: check-jsonschema ## Validate the examples against the schema
 	@echo "Validating examples against schema"
 ifeq ($(VERBOSE),1)
-	@for example in examples/v1/*.json; do \
-		if [ -f "$$example" ]; then \
-			echo "Validating $$(basename $$example)..."; \
-			jsonschema validate --resolve schemas/v1/metric.v1.schema.json --resolve schemas/semver.schema.json schemas/v1/summary.v1.schema.json "$$example"; \
-		fi \
+	@find examples -name "*.json" -type f | while read example; do \
+		echo "Validating $$(basename $$example)..."; \
+		jsonschema validate --resolve schemas/metric/1.0.0/schema.json --resolve schemas/semver/2.0.0/schema.json schemas/summary/1.0.0/schema.json "$$example"; \
 	done
 else
-	@for example in examples/v1/*.json; do \
-		if [ -f "$$example" ]; then \
-			if jsonschema validate --resolve schemas/v1/metric.v1.schema.json --resolve schemas/semver.schema.json schemas/v1/summary.v1.schema.json "$$example" > /dev/null 2>&1; then \
-				echo "✅ $$(basename $$example)"; \
-			else \
-				echo "❌ $$(basename $$example) - Validation failed"; \
-			fi; \
-		fi \
+	@find examples -name "*.json" -type f | while read example; do \
+		if jsonschema validate --resolve schemas/metric/1.0.0/schema.json --resolve schemas/semver/2.0.0/schema.json schemas/summary/1.0.0/schema.json "$$example" > /dev/null 2>&1; then \
+			echo "✅ $$(basename $$example)"; \
+		else \
+			echo "❌ $$(basename $$example) - Validation failed"; \
+		fi; \
 	done
 endif

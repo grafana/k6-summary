@@ -8,7 +8,7 @@
     "additionalProperties": false,
     "properties": {
       "version": {
-        "$ref": "../../semver/2.0.0/schema.json",
+        "$ref": "https://schemas.k6.io/semver/2.0.0/schema.json",
         "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
       },
       "metadata": {

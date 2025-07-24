@@ -22,7 +22,6 @@
           "name": "http_reqs",
           "type": "counter",
           "contains": "default",
-          "category": "http",
           "values": {
             "count": 1500,
             "rate": 24.79
@@ -32,7 +31,6 @@
           "name": "http_req_duration",
           "type": "trend",
           "contains": "time",
-          "category": "http",
           "values": {
             "avg": 245.67,
             "min": 123.45,
@@ -48,7 +46,6 @@
           "name": "http_req_failed",
           "type": "rate",
           "contains": "default",
-          "category": "http",
           "values": {
             "rate": 0.02,
             "passes": 1470,
@@ -59,7 +56,6 @@
           "name": "http_req_blocked",
           "type": "trend",
           "contains": "time",
-          "category": "http",
           "values": {
             "avg": 1.23,
             "min": 0.45,
@@ -75,7 +71,6 @@
           "name": "iterations",
           "type": "counter",
           "contains": "default",
-          "category": "execution",
           "values": {
             "count": 1500,
             "rate": 24.79
@@ -85,7 +80,6 @@
           "name": "iteration_duration",
           "type": "trend",
           "contains": "time",
-          "category": "execution",
           "values": {
             "avg": 250.34,
             "min": 125.67,
@@ -101,7 +95,6 @@
           "name": "vus",
           "type": "gauge",
           "contains": "default",
-          "category": "execution",
           "values": {
             "value": 10,
             "min": 1,
@@ -112,7 +105,6 @@
           "name": "vus_max",
           "type": "gauge",
           "contains": "default",
-          "category": "execution",
           "values": {
             "value": 10,
             "min": 10,
@@ -123,7 +115,6 @@
           "name": "data_received",
           "type": "counter",
           "contains": "data",
-          "category": "network",
           "values": {
             "count": 15728640,
             "rate": 259972.89
@@ -133,7 +124,6 @@
           "name": "data_sent",
           "type": "counter",
           "contains": "data",
-          "category": "network",
           "values": {
             "count": 1048576,
             "rate": 17328.52
@@ -143,7 +133,6 @@
           "name": "my_custom_metric",
           "type": "counter",
           "contains": "default",
-          "category": "custom",
           "values": {
             "count": 750,
             "rate": 12.40
@@ -156,8 +145,7 @@
             "name": "checks_total",
             "type": "counter",
             "contains": "default",
-            "category": "execution",
-            "values": {
+              "values": {
               "count": 3000,
               "rate": 49.59
             }
@@ -166,8 +154,7 @@
             "name": "checks_succeeded",
             "type": "rate",
             "contains": "default",
-            "category": "execution",
-            "values": {
+              "values": {
               "rate": 0.95,
               "passes": 2850,
               "fails": 150
@@ -177,8 +164,7 @@
             "name": "checks_failed",
             "type": "rate",
             "contains": "default",
-            "category": "execution",
-            "values": {
+              "values": {
               "rate": 0.05,
               "passes": 150,
               "fails": 2850

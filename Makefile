@@ -40,30 +40,33 @@ check-jsonschema: ## Check if jsonschema CLI is installed
 validate-schema: check-jsonschema ## Validate the JSON schema against the meta-schema
 	@echo "Validating JSON schemas"
 ifeq ($(VERBOSE),1)
-	@find schemas -name "schema.json" -type f | while read schema; do \
-		echo "Validating $$schema..."; \
-		jsonschema metaschema "$$schema"; \
-	done
+	@find schemas -name "schema.json" -type f -exec sh -c 'echo "Validating {}..."; jsonschema metaschema "{}"' \;
 else
-	@find schemas -name "schema.json" -type f | while read schema; do \
-		jsonschema metaschema "$$schema" > /dev/null; \
-	done
+	@find schemas -name "schema.json" -type f -exec sh -c 'jsonschema metaschema "{}" >/dev/null 2>&1' \;
 	@echo "✅ All schemas valid"
 endif
 
 validate-examples: check-jsonschema ## Validate the examples against the schema
 	@echo "Validating examples against schema"
 ifeq ($(VERBOSE),1)
-	@find examples -name "*.json" -type f | while read example; do \
-		echo "Validating $$(basename $$example)..."; \
-		jsonschema validate --resolve schemas/metric/1.0.0/schema.json --resolve schemas/semver/2.0.0/schema.json schemas/summary/1.0.0/schema.json "$$example"; \
-	done
+	@find examples -name "*.json" -type f -exec sh -c '\
+		echo "Validating $$(basename "$$1")..."; \
+		jsonschema validate \
+			--resolve schemas/metric/1.0.0/schema.json \
+			--resolve schemas/semver/2.0.0/schema.json \
+			schemas/summary/1.0.0/schema.json \
+			"$$1"; \
+	' sh {} \;
 else
-	@find examples -name "*.json" -type f | while read example; do \
-		if jsonschema validate --resolve schemas/metric/1.0.0/schema.json --resolve schemas/semver/2.0.0/schema.json schemas/summary/1.0.0/schema.json "$$example" > /dev/null 2>&1; then \
-			echo "✅ $$(basename $$example)"; \
+	@find examples -name "*.json" -type f -exec sh -c ' \
+		if jsonschema validate \
+			--resolve schemas/metric/1.0.0/schema.json \
+			--resolve schemas/semver/2.0.0/schema.json \
+			schemas/summary/1.0.0/schema.json \
+			"$$1" >/dev/null 2>&1; then \
+			echo "✅ $$(basename "$$1")"; \
 		else \
-			echo "❌ $$(basename $$example) - Validation failed"; \
-		fi; \
-	done
+			echo "❌ $$(basename "$$1") - Validation failed"; \
+		fi \
+	' sh {} \;
 endif

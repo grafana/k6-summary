@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.k6.io/metric/1.0.0/schema.json",
   "title": "k6 Metric Schema v1",
-  "description": "JSON schema for k6 metric objects with category information",
+  "description": "JSON schema for k6 metric objects",
   "oneOf": [
     {
       "$ref": "#/$defs/counter"
@@ -21,7 +21,7 @@
     "common": {
       "type": "object",
       "description": "Base properties for all metrics",
-      "required": ["name", "type", "contains", "category"],
+      "required": ["name", "type", "contains"],
       "properties": {
         "name": {
           "type": "string",
@@ -36,13 +36,6 @@
           "type": "string",
           "enum": ["default", "time", "data"],
           "description": "The type of data the metric contains"
-        },
-        "category": {
-          "type": "string",
-          "pattern": "^[a-z_]+$",
-          "description": "The metric category",
-          "examples": ["http", "execution", "network", "browser", "web_vitals", "grpc", "websocket", "custom"],
-          "$comment": "The category field is left open to allow for future expansion of the metric categories. It however should contain a valid identifier."
         }
       }
     },
@@ -61,7 +54,6 @@
               "const": "counter"
             },
             "contains": true,
-            "category": true,
             "values": {
               "type": "object",
               "description": "Counter metric values",
@@ -99,7 +91,6 @@
               "const": "gauge"
             },
             "contains": true,
-            "category": true,
             "values": {
               "type": "object",
               "description": "Gauge metric values",
@@ -139,7 +130,6 @@
               "const": "rate"
             },
             "contains": true,
-            "category": true,
             "values": {
               "type": "object",
               "description": "Rate metric values",
@@ -183,12 +173,11 @@
               "const": "trend"
             },
             "contains": true,
-            "category": true,
             "values": {
               "type": "object",
               "description": "Trend metric values with configurable statistics",
-              "required": ["count"],
               "additionalProperties": false,
+              "$comment": "Trend metrics' properties can be overridden, we don't require them to be present, and instead list the default ones.",
               "properties": {
                 "count": {
                   "type": "integer",
@@ -218,14 +207,6 @@
                 "p(95)": {
                   "type": "number",
                   "description": "95th percentile"
-                },
-                "p(99)": {
-                  "type": "number",
-                  "description": "99th percentile"
-                },
-                "p(99.9)": {
-                  "type": "number",
-                  "description": "99.9th percentile"
                 }
               },
               "patternProperties": {

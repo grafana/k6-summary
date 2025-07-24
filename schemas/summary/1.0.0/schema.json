@@ -83,7 +83,7 @@
             "type": "array",
             "description": "Array of all metrics from the test execution",
             "items": {
-              "$ref": "../../metric/1.0.0/schema.json"
+              "$ref": "https://schemas.k6.io/metric/1.0.0/schema.json"
             }
           },
           "checks": {

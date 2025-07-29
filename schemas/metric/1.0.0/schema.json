@@ -128,7 +128,7 @@
             "values": {
               "type": "object",
               "description": "Rate metric values",
-              "required": ["rate", "passes", "fails"],
+              "required": ["rate", "passes", "fails", "total"],
               "additionalProperties": false,
               "properties": {
                 "rate": {
@@ -146,6 +146,11 @@
                   "type": "integer",
                   "minimum": 0,
                   "description": "Number of failed events"
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Total number of events (passes + fails)"
                 }
               }
             }

@@ -42,7 +42,8 @@
           "values": {
             "rate": 0.02,
             "passes": 1470,
-            "fails": 30
+            "fails": 30,
+            "total": 1500
           }
         },
         {
@@ -145,7 +146,8 @@
             "values": {
               "rate": 0.95,
               "passes": 2850,
-              "fails": 150
+              "fails": 150,
+              "total": 3000
             }
           },
           {
@@ -155,7 +157,8 @@
             "values": {
               "rate": 0.05,
               "passes": 150,
-              "fails": 2850
+              "fails": 2850,
+              "total": 3000
             }
           }
         ],

@@ -134,37 +134,37 @@
         }
       ],
       "checks": {
-        "metrics": {
-          "checksTotal": {
+        "metrics": [
+          {
             "name": "checks_total",
             "type": "counter",
             "contains": "default",
-              "values": {
+            "values": {
               "count": 3000,
               "rate": 49.59
             }
           },
-          "checksSucceeded": {
+          {
             "name": "checks_succeeded",
             "type": "rate",
             "contains": "default",
-              "values": {
+            "values": {
               "rate": 0.95,
               "passes": 2850,
               "fails": 150
             }
           },
-          "checksFailed": {
+          {
             "name": "checks_failed",
             "type": "rate",
             "contains": "default",
-              "values": {
+            "values": {
               "rate": 0.05,
               "passes": 150,
               "fails": 2850
             }
           }
-        },
+        ],
         "results": [
           {
             "name": "status is 200",

@@ -57,18 +57,13 @@
             "values": {
               "type": "object",
               "description": "Counter metric values",
-              "required": ["count", "rate"],
+              "required": ["count"],
               "additionalProperties": false,
               "properties": {
                 "count": {
                   "type": "number",
                   "minimum": 0,
                   "description": "Total count of events"
-                },
-                "rate": {
-                  "type": "number",
-                  "minimum": 0,
-                  "description": "Rate of events per second"
                 }
               }
             }

@@ -17,8 +17,7 @@
           "type": "counter",
           "contains": "default",
           "values": {
-            "count": 1500,
-            "rate": 24.79
+            "count": 1500
           }
         },
         {
@@ -66,8 +65,7 @@
           "type": "counter",
           "contains": "default",
           "values": {
-            "count": 1500,
-            "rate": 24.79
+            "count": 1500
           }
         },
         {
@@ -110,8 +108,7 @@
           "type": "counter",
           "contains": "data",
           "values": {
-            "count": 15728640,
-            "rate": 259972.89
+            "count": 15728640
           }
         },
         {
@@ -119,8 +116,7 @@
           "type": "counter",
           "contains": "data",
           "values": {
-            "count": 1048576,
-            "rate": 17328.52
+            "count": 1048576
           }
         },
         {
@@ -128,8 +124,7 @@
           "type": "counter",
           "contains": "default",
           "values": {
-            "count": 750,
-            "rate": 12.40
+            "count": 750
           }
         }
       ],
@@ -140,8 +135,7 @@
             "type": "counter",
             "contains": "default",
             "values": {
-              "count": 3000,
-              "rate": 49.59
+              "count": 3000
             }
           },
           {

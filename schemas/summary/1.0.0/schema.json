@@ -88,9 +88,10 @@
                   }
                 }
               },
-              "ordered": {
+              "results": {
                 "type": "array",
                 "description": "Individual check results in execution order",
+                "$comment": "Results are ordered following the order they were defined/interpreted in the source script, aligned with k6's internal behavior",
                 "items": {
                   "type": "object",
                   "required": ["name", "passes", "fails"],

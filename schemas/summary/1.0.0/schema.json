@@ -47,25 +47,6 @@
             "type": "number",
             "minimum": 0,
             "description": "Test run duration in seconds"
-          },
-          "outputs": {
-            "type": "array",
-            "description": "List of configured outputs",
-            "items": {
-              "type": "object",
-              "required": ["outputType"],
-              "additionalProperties": false,
-              "properties": {
-                "outputType": {
-                  "type": "string",
-                  "description": "Type of output (e.g., json, csv, cloud, influxdb)"
-                },
-                "configArgument": {
-                  "type": "string",
-                  "description": "Output destination (file path, URL, etc.)"
-                }
-              }
-            }
           }
         }
       },

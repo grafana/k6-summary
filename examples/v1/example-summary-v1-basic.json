@@ -7,13 +7,7 @@
     "config": {
       "execution": "local",
       "script": "test-script.js",
-      "duration": 60.0,
-      "outputs": [
-        {
-          "outputType": "json",
-          "configArgument": "summary.json"
-        }
-      ]
+      "duration": 60.0
     },
     "results": {
       "passed": true,

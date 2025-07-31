@@ -128,24 +128,13 @@
             "values": {
               "type": "object",
               "description": "Rate metric values",
-              "required": ["rate", "passes", "fails", "total"],
+              "required": ["passes", "total"],
               "additionalProperties": false,
               "properties": {
-                "rate": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 1,
-                  "description": "Success rate as a decimal (0.0 to 1.0)"
-                },
                 "passes": {
                   "type": "integer",
                   "minimum": 0,
                   "description": "Number of successful events"
-                },
-                "fails": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "description": "Number of failed events"
                 },
                 "total": {
                   "type": "integer",

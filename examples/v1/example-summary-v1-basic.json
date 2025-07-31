@@ -40,9 +40,7 @@
           "type": "rate",
           "contains": "default",
           "values": {
-            "rate": 0.02,
             "passes": 1470,
-            "fails": 30,
             "total": 1500
           }
         },
@@ -144,9 +142,7 @@
             "type": "rate",
             "contains": "default",
             "values": {
-              "rate": 0.95,
               "passes": 2850,
-              "fails": 150,
               "total": 3000
             }
           },
@@ -155,9 +151,7 @@
             "type": "rate",
             "contains": "default",
             "values": {
-              "rate": 0.05,
               "passes": 150,
-              "fails": 2850,
               "total": 3000
             }
           }

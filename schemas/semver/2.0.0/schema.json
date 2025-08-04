@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.k6.io/semver/2.0.0/schema.json",
+  "title": "Semantic Versioning 2.0.0 Schema",
+  "description": "JSON schema for validating semantic version strings according to semver 2.0.0 specification",
+  "type": "string",
+  "minLength": 5,
+  "maxLength": 256,
+  "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+  "examples": [
+    "1.0.0",
+    "2.1.3",
+    "1.0.0-alpha",
+    "1.0.0-beta.1",
+    "1.0.0-0.3.7",
+    "1.0.0-x.7.z.92",
+    "1.0.0+20130313144700",
+    "1.0.0-beta+exp.sha.5114f85",
+    "1.0.0+21AF26D3-117B344092BD"
+  ]
+}

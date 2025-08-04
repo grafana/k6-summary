@@ -128,10 +128,10 @@
             "values": {
               "type": "object",
               "description": "Rate metric values",
-              "required": ["passes", "total"],
+              "required": ["matches", "total"],
               "additionalProperties": false,
               "properties": {
-                "passes": {
+                "matches": {
                   "type": "integer",
                   "minimum": 0,
                   "description": "Number of successful events"
@@ -139,7 +139,7 @@
                 "total": {
                   "type": "integer",
                   "minimum": 0,
-                  "description": "Total number of events (passes + fails)"
+                  "description": "Total number of events (matches + fails)"
                 }
               }
             }

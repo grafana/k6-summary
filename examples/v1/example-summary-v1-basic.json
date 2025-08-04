@@ -40,7 +40,7 @@
           "type": "rate",
           "contains": "default",
           "values": {
-            "passes": 1470,
+            "matches": 1470,
             "total": 1500
           }
         },
@@ -142,7 +142,7 @@
             "type": "rate",
             "contains": "default",
             "values": {
-              "passes": 2850,
+              "matches": 2850,
               "total": 3000
             }
           },
@@ -151,7 +151,7 @@
             "type": "rate",
             "contains": "default",
             "values": {
-              "passes": 150,
+              "matches": 150,
               "total": 3000
             }
           }

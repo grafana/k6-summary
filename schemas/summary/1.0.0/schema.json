@@ -1,6 +1,5 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://schemas.k6.io/summary/1.0.0/schema.json",
     "title": "k6 Machine-Readable End-of-Test Summary Schema v1",
     "description": "Official JSON schema for k6's machine-readable end-of-test summary format version 1.0",
     "type": "object",
@@ -8,7 +7,7 @@
     "additionalProperties": false,
     "properties": {
       "version": {
-        "$ref": "https://schemas.k6.io/semver/2.0.0/schema.json",
+        "$ref": "schemas/semver/2.0.0/schema-cog.json#/$defs/SemVer",
         "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
       },
       "metadata": {
@@ -23,7 +22,7 @@
             "description": "RFC3339 timestamp when summary was generated"
           },
           "k6Version": {
-            "type": "string",
+            "$ref": "schemas/semver/2.0.0/schema-cog.json#/$defs/SemVer",
             "description": "Version of k6 that generated this summary"
           }
         }
@@ -64,7 +63,7 @@
             "type": "array",
             "description": "Array of all metrics from the test execution",
             "items": {
-              "$ref": "https://schemas.k6.io/metric/1.0.0/schema.json"
+              "$ref": "schemas/metric/1.0.0/schema-cog.json#/$defs/Metric"
             }
           },
           "checks": {
@@ -76,7 +75,7 @@
                 "type": "array",
                 "description": "Array of check-related metrics",
                 "items": {
-                  "$ref": "../../metric/1.0.0/schema.json"
+                  "$ref": "schemas/metric/1.0.0/schema-cog.json#/$defs/Metric"
                 }
               },
               "results": {

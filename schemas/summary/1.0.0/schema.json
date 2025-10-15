@@ -1,107 +1,106 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://schemas.k6.io/summary/1.0.0/schema.json",
-    "title": "k6 Machine-Readable End-of-Test Summary Schema v1",
-    "description": "Official JSON schema for k6's machine-readable end-of-test summary format version 1.0",
-    "type": "object",
-    "required": ["version", "metadata", "config", "results"],
-    "additionalProperties": false,
-    "properties": {
-      "version": {
-        "$ref": "https://schemas.k6.io/semver/2.0.0/schema.json",
-        "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
-      },
-      "metadata": {
-        "type": "object",
-        "description": "Metadata about the summary generation",
-        "required": ["generatedAt", "k6Version"],
-        "additionalProperties": false,
-        "properties": {
-          "generatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "RFC3339 timestamp when summary was generated"
-          },
-          "k6Version": {
-            "type": "string",
-            "description": "Version of k6 that generated this summary"
-          }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.k6.io/summary/1.0.0/schema.json",
+  "title": "k6 Machine-Readable End-of-Test Summary Schema v1",
+  "description": "Official JSON schema for k6's machine-readable end-of-test summary format version 1.0",
+  "type": "object",
+  "required": ["version", "metadata", "config", "results"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "$ref": "../../semver/2.0.0/schema.json",
+      "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the summary generation",
+      "required": ["generatedAt", "k6Version"],
+      "additionalProperties": false,
+      "properties": {
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "RFC3339 timestamp when summary was generated"
+        },
+        "k6Version": {
+          "$ref": "../../semver/2.0.0/schema.json",
+          "description": "Version of k6 that generated this summary"
         }
-      },
-      "config": {
-        "type": "object",
-        "description": "Configuration information about the test execution",
-        "required": ["execution", "duration"],
-        "additionalProperties": false,
-        "properties": {
-          "execution": {
-            "type": "string",
-            "enum": ["local", "cloud"],
-            "description": "Type of execution (local or cloud)"
-          },
-          "script": {
-            "type": "string",
-            "description": "Path or name of the test script"
-          },
-          "duration": {
-            "type": "number",
-            "minimum": 0,
-            "description": "Test run duration in seconds"
-          }
+      }
+    },
+    "config": {
+      "type": "object",
+      "description": "Configuration information about the test execution",
+      "required": ["execution", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "execution": {
+          "type": "string",
+          "enum": ["local", "cloud"],
+          "description": "Type of execution (local or cloud)"
+        },
+        "script": {
+          "type": "string",
+          "description": "Path or name of the test script"
+        },
+        "duration": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Test run duration in seconds"
         }
-      },
-      "results": {
-        "type": "object",
-        "description": "Test execution results data",
-        "required": ["passed", "metrics"],
-        "additionalProperties": false,
-        "properties": {
-          "passed": {
-            "type": "boolean",
-            "description": "Whether the test passed (true) or failed (false). Determined by threshold evaluations and other test criteria."
-          },
-          "metrics": {
-            "type": "array",
-            "description": "Array of all metrics from the test execution",
-            "items": {
-              "$ref": "https://schemas.k6.io/metric/1.0.0/schema.json"
-            }
-          },
-          "checks": {
-            "type": "object",
-            "description": "Check execution results",
-            "additionalProperties": false,
-            "properties": {
-              "metrics": {
-                "type": "array",
-                "description": "Array of check-related metrics",
-                "items": {
-                  "$ref": "../../metric/1.0.0/schema.json"
-                }
-              },
-              "results": {
-                "type": "array",
-                "description": "Individual check results in execution order",
-                "$comment": "Results are ordered following the order they were defined/interpreted in the source script, aligned with k6's internal behavior",
-                "items": {
-                  "type": "object",
-                  "required": ["name", "passes", "fails"],
-                  "additionalProperties": false,
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "Check name"
-                    },
-                    "passes": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "description": "Number of times the check passed"
-                    },
-                    "fails": {
-                      "type": "integer",
-                      "minimum": 0,
-                      "description": "Number of times the check failed"
-                    }
+      }
+    },
+    "results": {
+      "type": "object",
+      "description": "Test execution results data",
+      "required": ["passed", "metrics"],
+      "additionalProperties": false,
+      "properties": {
+        "passed": {
+          "type": "boolean",
+          "description": "Whether the test passed (true) or failed (false). Determined by threshold evaluations and other test criteria."
+        },
+        "metrics": {
+          "type": "array",
+          "description": "Array of all metrics from the test execution",
+          "items": {
+            "$ref": "../../metric/1.0.0/schema.json#/$defs/Metric"
+          }
+        },
+        "checks": {
+          "type": "object",
+          "description": "Check execution results",
+          "additionalProperties": false,
+          "properties": {
+            "metrics": {
+              "type": "array",
+              "description": "Array of check-related metrics",
+              "items": {
+                "$ref": "../../metric/1.0.0/schema.json#/$defs/Metric"
+              }
+            },
+            "results": {
+              "type": "array",
+              "description": "Individual check results in execution order",
+              "$comment": "Results are ordered following the order they were defined/interpreted in the source script, aligned with k6's internal behavior",
+              "items": {
+                "type": "object",
+                "required": ["name", "passes", "fails"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Check name"
+                  },
+                  "passes": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of times the check passed"
+                  },
+                  "fails": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of times the check failed"
                   }
                 }
               }
@@ -111,3 +110,4 @@
       }
     }
   }
+}

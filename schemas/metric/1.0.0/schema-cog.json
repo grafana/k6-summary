@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$ref": "#/$defs/Metric",
+  "title": "k6 Metric Schema v1",
+  "description": "JSON schema for k6 metric objects",
+  "$defs": {
+    "Metric": {
+      "title": "Metric",
+      "type": "object",
+      "required": ["name", "type", "contains", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["counter","gauge","rate","trend"] },
+        "contains": { "type": "string", "enum": ["default","time","data"] },
+        "values": {
+          "oneOf": [
+            { "$ref": "#/$defs/CounterValues" },
+            { "$ref": "#/$defs/GaugeValues" },
+            { "$ref": "#/$defs/RateValues" },
+            { "$ref": "#/$defs/TrendValues" }
+          ]
+        }
+      }
+    },
+    "CounterValues": { "type":"object","required":["count"],"properties":{"count":{"type":"number","minimum":0}}, "additionalProperties": false },
+    "GaugeValues":   { "type":"object","required":["value"],"properties":{"value":{"type":"number"},"min":{"type":"number"},"max":{"type":"number"}}, "additionalProperties": false },
+    "RateValues":    { "type":"object","required":["matches","total"],"properties":{"matches":{"type":"integer"},"total":{"type":"integer"}}, "additionalProperties": false },
+    "TrendValues":   {
+      "type":"object",
+      "properties": {
+        "count":{"type":"integer"}, "avg":{"type":"number"}, "min":{"type":"number"},
+        "med":{"type":"number"}, "max":{"type":"number"}, "p(90)":{"type":"number"}, "p(95)":{"type":"number"}
+      },
+      "patternProperties": { "^p\\([0-9]+(\\.[0-9]+)?\\)$": { "type":"number" } },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/cog/main/schemas/pipeline.json
+
+debug: true
+
+parameters:
+  output_dir: './generated/%l'
+  cog_version: 'v0.0.x'
+  go_package_root: 'k6-summary'
+
+inputs:
+  - jsonschema:
+      path: '%__config_dir%/../schemas/summary/1.0.0/schema-cog.json'
+      package: summary
+
+output:
+  directory: '%output_dir%'
+
+  types: true
+  builders: true
+  converters: false
+  api_reference: true
+
+  languages:
+    - go:
+        generate_json_marshaller: true
+        generate_strict_unmarshaller: true
+        generate_equal: true
+        generate_validate: true
+        package_root: '%go_package_root%'

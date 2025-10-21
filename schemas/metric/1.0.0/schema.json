@@ -1,213 +1,50 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.k6.io/metric/1.0.0/schema.json",
+  "$ref": "#/$defs/Metric",
   "title": "k6 Metric Schema v1",
   "description": "JSON schema for k6 metric objects",
-  "oneOf": [
-    {
-      "$ref": "#/$defs/counter"
-    },
-    {
-      "$ref": "#/$defs/gauge"
-    },
-    {
-      "$ref": "#/$defs/rate"
-    },
-    {
-      "$ref": "#/$defs/trend"
-    }
-  ],
   "$defs": {
-    "common": {
+    "Metric": {
+      "title": "Metric",
       "type": "object",
-      "description": "Base properties for all metrics",
-      "required": ["name", "type", "contains"],
+      "required": ["name", "type", "contains", "values"],
+      "additionalProperties": false,
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "The metric name"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["counter", "gauge", "rate", "trend"],
-          "description": "The metric type"
-        },
-        "contains": {
-          "type": "string",
-          "enum": ["default", "time", "data"],
-          "description": "The type of data the metric contains"
-        }
-      }
-    },
-    "counter": {
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["counter","gauge","rate","trend"] },
+        "contains": { "type": "string", "enum": ["default","time","data"] },
+        "values": { "type": "object" }
+      },
       "allOf": [
         {
-          "$ref": "#/$defs/common"
+          "if": { "properties": { "type": { "const": "counter" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/CounterValues" } } }
         },
         {
-          "type": "object",
-          "required": ["values"],
-          "additionalProperties": false,
-          "properties": {
-            "name": true,
-            "type": {
-              "const": "counter"
-            },
-            "contains": true,
-            "values": {
-              "type": "object",
-              "description": "Counter metric values",
-              "required": ["count"],
-              "additionalProperties": false,
-              "properties": {
-                "count": {
-                  "type": "number",
-                  "minimum": 0,
-                  "description": "Total count of events"
-                }
-              }
-            }
-          }
+          "if": { "properties": { "type": { "const": "gauge" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/GaugeValues" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "rate" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/RateValues" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "trend" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/TrendValues" } } }
         }
       ]
     },
-    "gauge": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/common"
-        },
-        {
-          "type": "object",
-          "required": ["values"],
-          "additionalProperties": false,
-          "properties": {
-            "name": true,
-            "type": {
-              "const": "gauge"
-            },
-            "contains": true,
-            "values": {
-              "type": "object",
-              "description": "Gauge metric values",
-              "required": ["value", "min", "max"],
-              "additionalProperties": false,
-              "properties": {
-                "value": {
-                  "type": "number",
-                  "description": "Current/final gauge value"
-                },
-                "min": {
-                  "type": "number",
-                  "description": "Minimum observed value"
-                },
-                "max": {
-                  "type": "number",
-                  "description": "Maximum observed value"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "rate": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/common"
-        },
-        {
-          "type": "object",
-          "required": ["values"],
-          "additionalProperties": false,
-          "properties": {
-            "name": true,
-            "type": {
-              "const": "rate"
-            },
-            "contains": true,
-            "values": {
-              "type": "object",
-              "description": "Rate metric values",
-              "required": ["matches", "total"],
-              "additionalProperties": false,
-              "properties": {
-                "matches": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "description": "Number of successful events"
-                },
-                "total": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "description": "Total number of events (matches + fails)"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
-    "trend": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/common"
-        },
-        {
-          "type": "object",
-          "required": ["values"],
-          "additionalProperties": false,
-          "properties": {
-            "name": true,
-            "type": {
-              "const": "trend"
-            },
-            "contains": true,
-            "values": {
-              "type": "object",
-              "description": "Trend metric values with configurable statistics",
-              "additionalProperties": false,
-              "$comment": "Trend metrics' properties can be overridden, we don't require them to be present, and instead list the default ones.",
-              "properties": {
-                "count": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "description": "Number of data points"
-                },
-                "avg": {
-                  "type": "number",
-                  "description": "Average (mean) value"
-                },
-                "min": {
-                  "type": "number",
-                  "description": "Minimum value"
-                },
-                "med": {
-                  "type": "number",
-                  "description": "Median value"
-                },
-                "max": {
-                  "type": "number",
-                  "description": "Maximum value"
-                },
-                "p(90)": {
-                  "type": "number",
-                  "description": "90th percentile"
-                },
-                "p(95)": {
-                  "type": "number",
-                  "description": "95th percentile"
-                }
-              },
-              "patternProperties": {
-                "^p\\([0-9]+(\\.[0-9]+)?\\)$": {
-                  "type": "number",
-                  "description": "Custom percentile value"
-                }
-              }
-            }
-          }
-        }
-      ]
+    "CounterValues": { "type":"object","required":["count"],"properties":{"count":{"type":"number","minimum":0}}, "additionalProperties": false },
+    "GaugeValues":   { "type":"object","required":["value"],"properties":{"value":{"type":"number"},"min":{"type":"number"},"max":{"type":"number"}}, "additionalProperties": false },
+    "RateValues":    { "type":"object","required":["matches","total"],"properties":{"matches":{"type":"integer"},"total":{"type":"integer"}}, "additionalProperties": false },
+    "TrendValues":   {
+      "type":"object",
+      "properties": {
+        "count":{"type":"integer"}, "avg":{"type":"number"}, "min":{"type":"number"},
+        "med":{"type":"number"}, "max":{"type":"number"}, "p(90)":{"type":"number"}, "p(95)":{"type":"number"}
+      },
+      "patternProperties": { "^p\\([0-9]+(\\.[0-9]+)?\\)$": { "type":"number" } },
+      "additionalProperties": false
     }
   }
 }

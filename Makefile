@@ -5,7 +5,7 @@ VERBOSE ?= 0
 
 CHECK_METASCHEMA_FLAGS := --quiet
 ifeq ($(VERBOSE),1)
-	CHECK_METASCHEMA_FLAGS = --verbose
+	CHECK_METASCHEMA_FLAGS := --verbose
 endif
 
 # Find all schema.json files recursively

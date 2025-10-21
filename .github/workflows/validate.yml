@@ -1,0 +1,39 @@
+name: Validate JSON Schema and Examples
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Schema and Examples
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Python environment
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
+        with:
+          python-version: '3.x'
+
+      - name: Install check-jsonschema
+        run: pipx install check-jsonschema
+
+      - name: Validate JSON Schema
+        run: make validate-schema
+        env:
+          VERBOSE: 1
+
+      - name: Validate Examples
+        run: make validate-examples
+        env:
+          VERBOSE: 1

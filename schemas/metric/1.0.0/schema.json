@@ -13,15 +13,26 @@
         "name": { "type": "string" },
         "type": { "type": "string", "enum": ["counter","gauge","rate","trend"] },
         "contains": { "type": "string", "enum": ["default","time","data"] },
-        "values": {
-          "oneOf": [
-            { "$ref": "#/$defs/CounterValues" },
-            { "$ref": "#/$defs/GaugeValues" },
-            { "$ref": "#/$defs/RateValues" },
-            { "$ref": "#/$defs/TrendValues" }
-          ]
+        "values": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "counter" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/CounterValues" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "gauge" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/GaugeValues" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "rate" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/RateValues" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "trend" } }, "required": ["type"] },
+          "then": { "properties": { "values": { "$ref": "#/$defs/TrendValues" } } }
         }
-      }
+      ]
     },
     "CounterValues": { "type":"object","required":["count"],"properties":{"count":{"type":"number","minimum":0}}, "additionalProperties": false },
     "GaugeValues":   { "type":"object","required":["value"],"properties":{"value":{"type":"number"},"min":{"type":"number"},"max":{"type":"number"}}, "additionalProperties": false },

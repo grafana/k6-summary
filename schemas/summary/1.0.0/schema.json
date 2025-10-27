@@ -52,13 +52,9 @@
       "results": {
         "type": "object",
         "description": "Test execution results data",
-        "required": ["passed", "metrics"],
+        "required": ["metrics"],
         "additionalProperties": false,
         "properties": {
-          "passed": {
-            "type": "boolean",
-            "description": "Whether the test passed (true) or failed (false). Determined by threshold evaluations and other test criteria."
-          },
           "metrics": {
             "type": "array",
             "description": "Array of all metrics from the test execution",

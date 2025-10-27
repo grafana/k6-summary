@@ -7,7 +7,7 @@
     "additionalProperties": false,
     "properties": {
       "version": {
-        "$ref": "../../semver/2.0.0/schema.json",
+        "$ref": "../../semver/2.0.0/schema.json#/$defs/SemVer",
         "description": "Schema version in semver 2.0 format (e.g., '1.0.0')"
       },
       "metadata": {
@@ -22,7 +22,7 @@
             "description": "RFC3339 timestamp when summary was generated"
           },
           "k6Version": {
-            "$ref": "../../semver/2.0.0/schema.json",
+            "$ref": "../../semver/2.0.0/schema.json#/$defs/SemVer",
             "description": "Version of k6 that generated this summary"
           }
         }

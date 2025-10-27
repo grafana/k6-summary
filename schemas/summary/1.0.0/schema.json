@@ -63,7 +63,7 @@
             "type": "array",
             "description": "Array of all metrics from the test execution",
             "items": {
-              "$ref": "../../metric/1.0.0/schema.json"
+              "$ref": "../../metric/1.0.0/schema.json#/$defs/Metric"
             }
           },
           "checks": {
@@ -75,7 +75,7 @@
                 "type": "array",
                 "description": "Array of check-related metrics",
                 "items": {
-                  "$ref": "../../metric/1.0.0/schema.json"
+                  "$ref": "../../metric/1.0.0/schema.json#/$defs/Metric"
                 }
               },
               "results": {
